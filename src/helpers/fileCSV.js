@@ -1,8 +1,9 @@
 import csv from 'csv-parser';
 import { createReadStream } from 'fs';
 import { hasDisability } from './disability.js';
-import { convertDate, formatState, convertURL } from "./conversions.js";
 import { database} from './../database/mySql.js'
+import { domiciliosModel } from '../models/domicilios.model.js';
+import { matriculasModel } from '../models/matriculas.model.js';
 
 
 export const readCSVFile = (csvFilePath) => {
@@ -24,6 +25,36 @@ export const readCSVFile = (csvFilePath) => {
     });
 }
 
+export const duplicateMatriculaCSVFile = (csvFilePath) => {
+    return new Promise((resolve, reject) => {
+        const results = [];
+        const seenNumbers = new Set();
+        const duplicates = new Set();
+        createReadStream(csvFilePath)
+            .pipe(csv())
+            .on('data', (row) => {
+                const matricula = row.matricula;
+                if (seenNumbers.has(matricula)) {
+                    duplicates.add(matricula);
+                } else {
+                    seenNumbers.add(matricula);
+                    results.push(row);
+                }
+            })
+            .on('end', () => {
+                console.log('Archivo CSV procesado con éxito');
+                console.log('Valores duplicados:', Array.from(duplicates));
+                resolve({
+                    duplicates: Array.from(duplicates),
+                    total: duplicates.size
+                });
+            })
+            .on('error', (err) => {
+                reject(err)
+            })
+    });
+}
+
 export const chargeCSV = (csvFilePath) => {
     return new Promise((resolve, reject) => {
         const result = [];
@@ -31,41 +62,19 @@ export const chargeCSV = (csvFilePath) => {
         createReadStream(csvFilePath)
             .pipe(csv())
             .on('data', async (row) => {
-
-                row.fechaRegistro = convertDate(row.fechaRegistro, true);
-                row.fechaNacimiento = convertDate(row.fechaNacimiento);
-                row.matricula = Number(row.matricula);
-                row.telefono = Number(row.telefono);
-                row.estado = formatState(row.estado);
-                row.cp = Number(row.cp);
-                // row.comprobanteDomicilio = row.comprobanteDomicilio === 'BD FISICA' ? row.comprobanteDomicilio : convertURL(row.comprobanteDomicilio);
-                // row.comprobanteEstudios = row.comprobanteEstudios === 'BD FISICA' ? row.comprobanteEstudios : convertURL(row.comprobanteEstudios);
-                // row.actaNacimiento = row.actaNacimiento === 'BD FISICA' ? row.actaNacimiento : convertURL(row.actaNacimiento);
-
-
-                const query = `
-                    INSERT INTO estudiantes (
-                      fechaRegistro, curp, matricula, nombre, a_paterno, a_materno, genero,
-                      fechaNacimiento, discapacidad, padecimiento, email, telefono, calle, colonia, municipio,
-                      estado, cp, escolaridad, comprobanteDomicilio, comprobanteEstudios, actaNacimiento
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                  `;
-                const values = [
-                    row.fechaRegistro, row.curp, row.matricula, row.nombre, row.a_paterno, row.a_materno, row.genero,
-                    row.fechaNacimiento, row.discapacidad, row.padecimiento, row.email, row.telefono, row.calle, row.colonia,
-                    row.municipio, row.estado, row.cp, row.escolaridad, row.comprobanteDomicilio, row.comprobanteEstudios,
-                    row.actaNacimiento
-                ];
+                const { queryMatricula, valuesMatricula} = matriculasModel(row);
+                //console.log(valuesMatricula);
                 
-
-                (await database).execute(query, values, (err, results) => {
+                // const { queryDomicilios, valuesDomicilios } =  domiciliosModel(row);
+                // const { queryEstudiantes, valuesEstudiantes } = estudiantesModel(row, valuesMatricula, valuesDomicilios);   
+                (await database).execute(queryMatricula, valuesMatricula, (err, results) => {
                     if (err) {
                         console.error('Error insertando datos:', err.stack);
                         return;
                     }
                     console.log('Datos insertados:', results.insertId);
                 });
-                result.push(values);
+                result.push(valuesMatricula);
             })
             .on('end', () => {
                 console.log('Archivo CSV procesado con éxito');

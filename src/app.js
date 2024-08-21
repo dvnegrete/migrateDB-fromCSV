@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 
 import { database } from './database/mySql.js';
-import { chargeCSV, readCSVFile } from './helpers/fileCSV.js';
+import { chargeCSV, duplicateMatriculaCSVFile, readCSVFile } from './helpers/fileCSV.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +41,17 @@ app.post('/', async (req = request, res = response) => {
   try {
     const csvFilePath = join(__dirname + '/data/c-13.csv');
     const result = await readCSVFile(csvFilePath);      
+    res.json(result)
+  } catch (err) {
+    console.error("Error readCSVFileL, ", err.stack);
+    res.status(500).json({ msg: "Error readCSVFile" });
+  }
+})
+
+app.get('/duplicateMatricula', async (req = request, res = response) => {
+  try {
+    const csvFilePath = join(__dirname + '/data/c-13.csv');
+    const result = await duplicateMatriculaCSVFile(csvFilePath);      
     res.json(result)
   } catch (err) {
     console.error("Error readCSVFileL, ", err.stack);

@@ -8,5 +8,4 @@ export const config = {
     portDB: process.env.PORT_DB,
     nameDB: process.env.NAME_DB,
     urlDB: process.env.URL_DB,
-    urlFiles: process.env.URL_FILES,
 };
