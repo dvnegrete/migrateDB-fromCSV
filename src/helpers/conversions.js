@@ -1,5 +1,6 @@
 import moment from "moment";
-import { numberStateMexican } from "../shared/constants.js";
+import { monthsDictionary as months, numberStateMexican } from "../shared/constants.js";
+
 
 export const convertDate = (dateString, hours = false) => {
   return hours ? new Date() : moment(dateString).format("YYYY-MM-DD");
@@ -20,27 +21,7 @@ export const annioMatricula = (stringNumber) => {
   return stringToNumber(res);
 };
 
-export const dateMySQL = (dateString) => {
-  const months = {
-    ene: "01",
-    feb: "02",
-    mar: "03",
-    abr: "04",
-    may: "05",
-    jun: "06",
-    jul: "07",
-    ago: "08",
-    sept: "09",
-    sep: "09",
-    oct: "10",
-    nov: "11",
-    dic: "12",
-  };
-  // if (dateString.includes('"')) {
-  //   console.log(dateString);
-  //   return formatDate(new Date());
-
-  // }
+export const dateMySQL = (dateString) => { 
 
   const [day, monthString, year, time, period] = dateString.split(" ");
   const month = months[monthString];
@@ -57,8 +38,6 @@ export const dateMySQL = (dateString) => {
       "0"
     )}:${minutes}:${seconds}`;
   } else {
-    // console.log(dateString);
-    // console.log(`${day}-${month}-${year} | ${time} | ${period}`);
     return formatDate(new Date());
   }
 };

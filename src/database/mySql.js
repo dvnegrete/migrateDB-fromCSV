@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import { createConnection } from 'mysql2/promise';
+import { createConnection, createPool } from 'mysql2/promise';
 
 dotenv.config();
 
-export const database = createConnection({
+export const database = createPool({
     host: process.env.HOST_DB,
     user: process.env.USER_DB,
     password: process.env.PASS_DB,

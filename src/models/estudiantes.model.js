@@ -1,7 +1,10 @@
 import { dateMySQL } from "../helpers/conversions.js";
 
 export const estudiantesModel = (matriculaId, domicilioId, row) => {
-  const timeStamp = dateMySQL(row.fechaRegistro);
+  const timeStamp =
+    row.fechaRegistro === null || row.fechaRegistro === undefined
+      ? formatDate(new Date())
+      : dateMySQL(row.fechaRegistro);
   const queryEstudiantes = `
     INSERT INTO estudiantes (
       matricula_id, 
@@ -19,8 +22,8 @@ export const estudiantesModel = (matriculaId, domicilioId, row) => {
       escolaridad, 
       escolaridad_comprobante, 
       acta_nacimiento, 
-      createdAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      createdAt, updatedAt
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const valuesEstudiantes = [
     matriculaId,
@@ -38,6 +41,7 @@ export const estudiantesModel = (matriculaId, domicilioId, row) => {
     row.escolaridad,
     row.comprobanteEstudios,
     row.actaNacimiento,
+    timeStamp,
     timeStamp,
   ];
 
