@@ -3,8 +3,11 @@ import {
   getPath,
   readFile,
   seletedForTable,
-  duplicateMatricula,
+  duplicateCURP,
   chargeFile,
+  verifyBirthdate,
+  gender,
+  duplicateMatricula
 } from "./controller.js";
 
 export function router(app){
@@ -13,6 +16,9 @@ export function router(app){
   router.get("/path", getPath);
   router.get("/table/:table", seletedForTable);
   router.get("/duplicateMatricula", duplicateMatricula);
+  router.get("/duplicateCurp", duplicateCURP);
+  router.get("/verifyBirthdate", verifyBirthdate);
+  router.get("/verifyGender", gender);
   router.post("/", readFile);
   router.post("/charge", chargeFile);
 }

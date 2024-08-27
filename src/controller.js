@@ -1,26 +1,31 @@
 import { request, response } from "express";
 import path, { join } from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 import { database } from "./database/mySql.js";
 
-import { readCSVFile, duplicateMatriculaCSVFile, chargeCSV } from "./helpers/fileCSV.js";
+import {
+  readCSVFile,
+  duplicateMatriculaCSVFile,
+  chargeCSV,
+  verifyBirthDate,
+  verifyGender,
+  duplicateCURPinCSVFile
+} from "./helpers/fileCSV.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const csvFilePath = join(__dirname + "/data/c-13.csv");
 
 export const seletedForTable = async (req = request, res = response) => {
   try {
     const { table } = req.params;
     const { field, value } = req.query;
     //${ field === undefined ? "*" : field }
-    const querySQL = `SELECT ${ field === undefined ? "*" : field } FROM ${table} WHERE ${field} = ${value}`;
+    const querySQL = `SELECT ${
+      field === undefined ? "*" : field
+    } FROM ${table} WHERE ${field} = ${value}`;
     //WHERE ${field} = null
-    (await database).query;
     const [results, fields] = await (await database).execute(querySQL);
-    //const [rows, fields] = await database.execute(querySQL);
-    //console.log(fields);
-    //console.log("Conexion");
-    //res.json(rows)
     res.json(results);
   } catch (err) {
     console.error("Error al hacer la consulta SQL, ", err.stack);
@@ -37,7 +42,7 @@ export const getPath = (req = request, res = response) => {
 
 export const readFile = async (req = request, res = response) => {
   try {
-    const csvFilePath = join(__dirname + "/data/c-13.csv");
+    
     const result = await readCSVFile(csvFilePath);
     res.json(result);
   } catch (err) {
@@ -48,8 +53,17 @@ export const readFile = async (req = request, res = response) => {
 
 export const duplicateMatricula = async (req = request, res = response) => {
   try {
-    const csvFilePath = join(__dirname + "/data/c-13.csv");
     const result = await duplicateMatriculaCSVFile(csvFilePath);
+    res.json(result);
+  } catch (err) {
+    console.error("Error readCSVFileL, ", err.stack);
+    res.status(500).json({ msg: "Error readCSVFile" });
+  }
+};
+
+export const duplicateCURP = async (req = request, res = response) => {
+  try {
+    const result = await duplicateCURPinCSVFile(csvFilePath);
     res.json(result);
   } catch (err) {
     console.error("Error readCSVFileL, ", err.stack);
@@ -59,11 +73,30 @@ export const duplicateMatricula = async (req = request, res = response) => {
 
 export const chargeFile = async (req = request, res = response) => {
   try {
-    const csvFilePath = join(__dirname + "/data/c-13.csv");
     const result = await chargeCSV(csvFilePath);
     res.json(result);
   } catch (err) {
     console.error("Error chargeCSV ", err.stack);
     res.status(500).json({ msg: "Error chargeCSV" });
+  }
+};
+
+export const verifyBirthdate = async (req = request, res = response) => {
+  try {
+    const result = await verifyBirthDate(csvFilePath);
+    res.json(result);
+  } catch (err) {
+    console.error("Error readCSVFileL, ", err.stack);
+    res.status(500).json({ msg: "Error readCSVFile" });
+  }
+};
+
+export const gender = async (req = request, res = response) => {
+  try {
+    const result = await verifyGender(csvFilePath);
+    res.json(result);
+  } catch (err) {
+    console.error("Error readCSVFileL, ", err.stack);
+    res.status(500).json({ msg: "Error readCSVFile" });
   }
 };

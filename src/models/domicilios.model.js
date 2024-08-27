@@ -16,10 +16,10 @@ export const domiciliosModel = (row) => {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const valuesDomicilios = [
-    row.calle  === "" ? null : row.calle,
+    row.calle  === "" ? null : row.calle.trim(),
     null,
-    row.colonia  === "" ? null : row.colonia,
-    row.municipio  === "" ? null : row.municipio,
+    row.colonia  === "" ? null : row.colonia.trim(),
+    row.municipio  === "" ? null : row.municipio.trim(),
     row.cp  === "" ? null : row.cp,
     stateWithName === "" ? null : stateWithName,
     row.comprobanteDomicilio  === "" ? null : row.comprobanteDomicilio,
