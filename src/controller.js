@@ -100,3 +100,18 @@ export const gender = async (req = request, res = response) => {
     res.status(500).json({ msg: "Error readCSVFile" });
   }
 };
+
+export const count = async (req = request, res = response) => {
+  try {
+    const { table } = req.params;
+    const querySQL = `SELECT COUNT(*) AS total FROM ${table}`;
+    const [results] = await (await database).execute(querySQL);
+    console.log(results);
+    
+    
+    res.json(results);
+  } catch (err) {
+    console.error("Error al hacer la consulta SQL, ", err.stack);
+    res.status(500).json({ msg: "Error al hacer la consulta SQL" });
+  }
+};

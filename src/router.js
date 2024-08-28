@@ -7,7 +7,8 @@ import {
   chargeFile,
   verifyBirthdate,
   gender,
-  duplicateMatricula
+  duplicateMatricula, 
+  count
 } from "./controller.js";
 
 export function router(app){
@@ -21,4 +22,5 @@ export function router(app){
   router.get("/verifyGender", gender);
   router.post("/", readFile);
   router.post("/charge", chargeFile);
+  router.get("/count/:table", count);
 }
