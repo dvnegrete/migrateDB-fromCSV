@@ -129,9 +129,9 @@ export const verifyBirthDate = (csvFilePath) => {
       .on("end", () => {
         console.log("Archivo CSV procesado con éxito");
         resolve({
-          days: [...seenDays],
-          months: [...seenMonths],
-          years: [...seenYears],
+          days: [...seenDays].sort(),
+          months: [...seenMonths].sort(),
+          years: [...seenYears].sort(),
           date: [...seenDates].sort((a, b) => a.localeCompare(b)),
         });
       })

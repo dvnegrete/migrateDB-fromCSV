@@ -9,4 +9,5 @@ export const database = createPool({
     password: process.env.PASS_DB,
     port: process.env.PORT_DB,
     database: process.env.NAME_DB,
+    charset: 'utf8mb4',
 });
