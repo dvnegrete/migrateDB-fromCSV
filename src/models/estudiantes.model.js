@@ -1,5 +1,6 @@
 import { dateMySQL, parseDateBirth } from "../helpers/conversions.js";
 import { cleanString } from "../helpers/cleanString.js";
+import { areContainMasking } from "../helpers/areContainMasking.js";
 
 export const estudiantesModel = (matriculaId, domicilioId, row) => {
   row.curp = cleanString(row.curp);
@@ -7,8 +8,8 @@ export const estudiantesModel = (matriculaId, domicilioId, row) => {
   row.a_materno = cleanString(row.a_materno);
   row.nombre = cleanString(row.nombre);
   row.genero = cleanString(row.genero);
-  row.telefono = cleanString(row.telefono);
-  row.email = cleanString(row.email);
+  row.telefono = areContainMasking(row.telefono);
+  row.email = areContainMasking(row.email);
   row.padecimiento = cleanString(row.padecimiento);
   row.discapacidad = cleanString(row.discapacidad);
   row.escolaridad = cleanString(row.escolaridad);
