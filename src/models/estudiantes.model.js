@@ -14,7 +14,11 @@ export const estudiantesModel = (matriculaId, domicilioId, row) => {
   row.discapacidad = cleanString(row.discapacidad);
   row.escolaridad = cleanString(row.escolaridad);
   row.comprobanteEstudios = cleanString(row.comprobanteEstudios);
+  row.comprobanteEstudios =
+    row.comprobanteEstudios === "BD FISICA" ? null : row.comprobanteEstudios;
   row.actaNacimiento = cleanString(row.actaNacimiento);
+  row.actaNacimiento =
+    row.actaNacimiento === "BD FISICA" ? null : row.actaNacimiento;
 
   const timeStamp =
     row.fechaRegistro === null || row.fechaRegistro === undefined
