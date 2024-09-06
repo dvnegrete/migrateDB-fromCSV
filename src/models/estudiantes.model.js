@@ -1,6 +1,8 @@
 import { dateMySQL, parseDateBirth } from "../helpers/conversions.js";
 import { cleanString } from "../helpers/cleanString.js";
 import { areContainMasking } from "../helpers/areContainMasking.js";
+import { cleanSuffering } from "../helpers/cleanSuffering.js";
+import { cleanDisability } from "../helpers/cleanDisability.js";
 
 export const estudiantesModel = (matriculaId, domicilioId, row) => {
   row.curp = cleanString(row.curp);
@@ -11,7 +13,9 @@ export const estudiantesModel = (matriculaId, domicilioId, row) => {
   row.telefono = areContainMasking(row.telefono);
   row.email = areContainMasking(row.email);
   row.padecimiento = cleanString(row.padecimiento);
+  row.padecimiento = cleanSuffering(row.padecimiento);
   row.discapacidad = cleanString(row.discapacidad);
+  row.discapacidad = cleanDisability(row.discapacidad);
   row.escolaridad = cleanString(row.escolaridad);
   row.comprobanteEstudios = cleanString(row.comprobanteEstudios);
   row.comprobanteEstudios =

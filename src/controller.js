@@ -9,12 +9,13 @@ import {
   chargeCSV,
   verifyBirthDate,
   verifyGender,
-  duplicateCURPinCSVFile
+  duplicateCURPinCSVFile,
 } from "./helpers/fileCSV.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const csvFilePath = join(__dirname + "/data/c-13.csv");
+const csvFilePath = join(__dirname + "/data/c-13-depurado.csv");
+// const csvFilePath = join(__dirname + "/data/c-13-errores.csv");
 
 export const seletedForTable = async (req = request, res = response) => {
   try {
@@ -42,7 +43,6 @@ export const getPath = (req = request, res = response) => {
 
 export const readFile = async (req = request, res = response) => {
   try {
-    
     const result = await readCSVFile(csvFilePath);
     res.json(result);
   } catch (err) {
@@ -107,8 +107,7 @@ export const count = async (req = request, res = response) => {
     const querySQL = `SELECT COUNT(*) AS total FROM ${table}`;
     const [results] = await (await database).execute(querySQL);
     console.log(results);
-    
-    
+
     res.json(results);
   } catch (err) {
     console.error("Error al hacer la consulta SQL, ", err.stack);

@@ -1,6 +1,6 @@
 import csv from "csv-parser";
 import { createReadStream } from "fs";
-import { hasDisability } from "./disability.js";
+import { cleanDisability } from "./cleanDisability.js";
 import { database } from "./../database/mySql.js";
 import { domiciliosModel } from "../models/domicilios.model.js";
 import { matriculasModel } from "../models/matriculas.model.js";
@@ -15,7 +15,7 @@ export const readCSVFile = (csvFilePath) => {
     createReadStream(csvFilePath)
       .pipe(csv())
       .on("data", (row) => {
-        const rowCompressed = hasDisability(row);
+        const rowCompressed = cleanDisability(row);
         results.push(rowCompressed);
       })
       .on("end", () => {
@@ -144,7 +144,7 @@ export const verifyBirthDate = (csvFilePath) => {
 export const verifyGender = (csvFilePath) => {
   return new Promise((resolve, reject) => {
     const setCURP = new Set();
-    const nombres = []
+    const nombres = [];
     const setDUPLICATE = new Set();
     const seenNumbers = new Set();
     createReadStream(csvFilePath)
@@ -152,18 +152,18 @@ export const verifyGender = (csvFilePath) => {
       .on("data", (row) => {
         const value = row.a_paterno.trim();
         if (setCURP.has(value)) {
-            setDUPLICATE.add(value);
-          } else {
-            seenNumbers.add(value);
-            nombres.push(value);
-          }
+          setDUPLICATE.add(value);
+        } else {
+          seenNumbers.add(value);
+          nombres.push(value);
+        }
       })
       .on("end", () => {
         console.log("Archivo CSV procesado con éxito");
         resolve({
-            setCURP: [...setCURP],
-            setDUPLICATE: [...setDUPLICATE],
-            seenNumbers: [...seenNumbers].sort()
+          setCURP: [...setCURP],
+          setDUPLICATE: [...setDUPLICATE],
+          seenNumbers: [...seenNumbers].sort(),
         });
       })
       .on("error", (err) => {
