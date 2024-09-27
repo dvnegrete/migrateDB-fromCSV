@@ -58,6 +58,35 @@ export const duplicateMatriculaCSVFile = (csvFilePath) => {
   });
 };
 
+export const matriculaBiggerCSVFile = (csvFilePath) => {
+  return new Promise((resolve, reject) => {
+    const results = [];
+    const bigger = new Set();
+    createReadStream(csvFilePath)
+      .pipe(csv())
+      .on("data", (row) => {
+        const matricula = row.matricula;
+        if (matricula.length > 14) {
+          bigger.add(matricula);
+        } else {
+          results.push(matricula);
+        }
+      })
+      .on("end", () => {
+        console.log("Archivo CSV procesado con éxito");
+        console.log("Valores duplicados:", Array.from(bigger));
+        resolve({
+          isBigger: Array.from(bigger),
+          total: bigger.size,
+          normalTotal: results.length,
+        });
+      })
+      .on("error", (err) => {
+        reject(err);
+      });
+  });
+};
+
 export const chargeCSV = (csvFilePath) => {
   return new Promise((resolve, reject) => {
     const result = [];

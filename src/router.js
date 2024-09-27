@@ -7,7 +7,8 @@ import {
   chargeFile,
   verifyBirthdate,
   gender,
-  duplicateMatricula, 
+  duplicateMatricula,
+  matriculaBigger,
   count
 } from "./controller.js";
 
@@ -17,6 +18,7 @@ export function router(app){
   router.get("/path", getPath);
   router.get("/table/:table", seletedForTable);
   router.get("/duplicateMatricula", duplicateMatricula);
+  router.get("/matriculaBigger", matriculaBigger);
   router.get("/duplicateCurp", duplicateCURP);
   router.get("/verifyBirthdate", verifyBirthdate);
   router.get("/verifyGender", gender);

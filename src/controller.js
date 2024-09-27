@@ -10,6 +10,7 @@ import {
   verifyBirthDate,
   verifyGender,
   duplicateCURPinCSVFile,
+  matriculaBiggerCSVFile
 } from "./helpers/fileCSV.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +55,16 @@ export const readFile = async (req = request, res = response) => {
 export const duplicateMatricula = async (req = request, res = response) => {
   try {
     const result = await duplicateMatriculaCSVFile(csvFilePath);
+    res.json(result);
+  } catch (err) {
+    console.error("Error readCSVFileL, ", err.stack);
+    res.status(500).json({ msg: "Error readCSVFile" });
+  }
+};
+
+export const matriculaBigger = async (req = request, res = response) => {
+  try {
+    const result = await matriculaBiggerCSVFile(csvFilePath);
     res.json(result);
   } catch (err) {
     console.error("Error readCSVFileL, ", err.stack);
