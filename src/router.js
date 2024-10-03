@@ -9,7 +9,8 @@ import {
   gender,
   duplicateMatricula,
   matriculaBigger,
-  count
+  count,
+  changeTokenUser
 } from "./controller.js";
 
 export function router(app){
@@ -25,4 +26,5 @@ export function router(app){
   router.post("/", readFile);
   router.post("/charge", chargeFile);
   router.get("/count/:table", count);
+  router.get("/oauth", changeTokenUser);
 }

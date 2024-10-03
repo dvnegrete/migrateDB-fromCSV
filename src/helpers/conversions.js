@@ -59,6 +59,8 @@ export const parseDateBirth = (dateStr) => {
   const verifyDay = notExchange ? day : year;
   const verifyYear = notExchange ? year : day;
   const fullYear =
-    verifyYear.length === 4 ? verifyYear : completeFourDigitYear(Number(verifyYear));
+    verifyYear.length === 4
+      ? verifyYear
+      : completeFourDigitYear(Number(verifyYear));
   return `${fullYear}-${months[month]}-${verifyDay.padStart(2, "0")}`;
 };

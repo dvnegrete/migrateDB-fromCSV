@@ -12,6 +12,7 @@ import {
   duplicateCURPinCSVFile,
   matriculaBiggerCSVFile
 } from "./helpers/fileCSV.js";
+import { signToken } from "./helpers/singToken.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -123,5 +124,17 @@ export const count = async (req = request, res = response) => {
   } catch (err) {
     console.error("Error al hacer la consulta SQL, ", err.stack);
     res.status(500).json({ msg: "Error al hacer la consulta SQL" });
+  }
+};
+
+export const changeTokenUser = async (req = request, res = response) => {
+  try {
+    const { id, email, nameComplete, username, role } = req.body;
+    const payload = { id, username, email, nameComplete, role };
+    const token = signToken(payload);
+    res.json(token);
+  } catch (err) {
+    console.error("Token Error", err.stack);
+    res.status(500).json({ msg: "Error Token" });
   }
 };
